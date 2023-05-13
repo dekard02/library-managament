@@ -1,33 +1,37 @@
 package com.dekard02.librarymanagement.entity;
 
-import java.util.Collection;
+import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
 @Entity
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Category {
+public class BookReturnRecord {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 150, nullable = false)
-    private String name;
+    @Column(nullable = false)
+    private LocalDateTime returnDate;
 
-    @Column(length = 150, nullable = false)
-    private String slug;
+    @OneToOne
+    private BookLoanRecord bookLoanRecord;
 
-    @ManyToMany(mappedBy = "categories")
-    private Collection<Book> books;
+    @ManyToOne
+    private Librarian librarian;
+
+    private Double fine;
+
 }
