@@ -28,6 +28,8 @@ public class Author {
 
     private LocalDateTime dateOfBirth;
 
+    private Boolean isDeleted;
+
     @OneToMany(mappedBy = "author")
     private Collection<Book> books;
 }

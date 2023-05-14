@@ -28,6 +28,8 @@ public class Category {
     @Column(length = 150, nullable = false)
     private String slug;
 
+    private Boolean isDeleted;
+
     @ManyToMany(mappedBy = "categories")
     private Collection<Book> books;
 }

@@ -36,6 +36,8 @@ public class Reader {
     @Column(length = 15, nullable = false)
     private String phone;
 
+    private Boolean active;
+
     @OneToMany(mappedBy = "reader")
     private Collection<BookLoanRecord> bookLoanRecords;
 }

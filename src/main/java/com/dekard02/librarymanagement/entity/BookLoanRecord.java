@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -30,8 +31,8 @@ public class BookLoanRecord {
     @ManyToOne
     private Reader reader;
 
-    @ManyToMany
-    private Collection<Book> books;
+    @OneToMany(mappedBy = "bookLoanRecord")
+    private Collection<BookLoanRecordItem> bookLoanRecordItems;
 
     @Column(nullable = false)
     private LocalDateTime loanDate;

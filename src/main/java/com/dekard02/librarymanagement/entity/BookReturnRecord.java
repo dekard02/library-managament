@@ -33,5 +33,4 @@ public class BookReturnRecord {
     private Librarian librarian;
 
     private Double fine;
-
 }

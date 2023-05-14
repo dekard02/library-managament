@@ -41,6 +41,8 @@ public class Librarian {
 
     private LocalDateTime dateOfBirth;
 
+    private Boolean active;
+
     @OneToMany(mappedBy = "librarian")
     private Collection<BookLoanRecord> bookLoanRecords;
 

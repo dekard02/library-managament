@@ -36,6 +36,8 @@ public class Book {
 
     @Column(nullable = false)
     private String description;
+    
+    private Boolean isDeleted;
 
     @ManyToOne
     private Author author;
@@ -46,6 +48,6 @@ public class Book {
     @ManyToMany
     private Collection<Category> categories;
 
-    @ManyToMany(mappedBy = "books")
-    private Collection<BookLoanRecord> bookLoanRecords;
+    @OneToMany(mappedBy = "book")
+    private Collection<BookLoanRecordItem> bookLoanRecordItems;
 }
