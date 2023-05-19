@@ -20,6 +20,8 @@ public interface StorageService {
 
     public String store(MultipartFile file, String dir);
 
+    public void delete(String filePath);
+
     public Resource loadAsResourceInPublicFolder(String filePath);
 
 }

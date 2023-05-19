@@ -3,6 +3,7 @@ package com.dekard02.librarymanagement.service.impl;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.UUID;
 import java.util.stream.Stream;
 
@@ -58,7 +59,9 @@ public class StorageServiceImpl implements StorageService {
             var fileName = UUID.randomUUID().toString() + "." + fileExtension;
 
             var filePath = Paths.get(fullDir, fileName);
-            Files.copy(multipartFile.getInputStream(), filePath);
+            var stream = multipartFile.getInputStream();
+            Files.copy(stream, filePath, StandardCopyOption.REPLACE_EXISTING);
+            stream.close();
             return Paths.get(fullDir, fileName).toString().replace("\\", "/");
         } catch (IOException e) {
             throw new RuntimeException("Something went wrong");
@@ -77,6 +80,16 @@ public class StorageServiceImpl implements StorageService {
         }
 
         return resource;
+    }
+
+    @Override
+    public void delete(String filePath) {
+        var path = Paths.get(filePath);
+        try {
+            Files.deleteIfExists(path);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }
