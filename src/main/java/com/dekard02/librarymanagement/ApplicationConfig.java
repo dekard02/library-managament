@@ -16,5 +16,4 @@ public class ApplicationConfig {
     public Slugify slugify() {
         return Slugify.builder().build();
     }
-
 }
