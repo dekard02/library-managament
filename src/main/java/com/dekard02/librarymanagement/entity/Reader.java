@@ -5,10 +5,14 @@ import java.util.Collection;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,6 +22,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 public class Reader {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,8 +41,14 @@ public class Reader {
     @Column(length = 15, nullable = false)
     private String phone;
 
-    private Boolean active;
+    private String photo;
 
     @OneToMany(mappedBy = "reader")
     private Collection<BookLoanRecord> bookLoanRecords;
+
+    private Boolean active;
+
+    @CreatedDate
+    private LocalDateTime createdAt;
+
 }
