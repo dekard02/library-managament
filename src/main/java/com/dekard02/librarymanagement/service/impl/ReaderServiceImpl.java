@@ -9,8 +9,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.dekard02.librarymanagement.api.ResponseBody;
 import com.dekard02.librarymanagement.dto.ReaderDto;
-import com.dekard02.librarymanagement.dto.mapper.ReaderRequestDtoMapper;
-import com.dekard02.librarymanagement.dto.mapper.ReaderResponseDtoMapper;
+import com.dekard02.librarymanagement.dto.mapper.ReaderDtoMapper;
 import com.dekard02.librarymanagement.entity.Reader;
 import com.dekard02.librarymanagement.helper.ResponseBodyHelper;
 import com.dekard02.librarymanagement.repository.ReaderRepository;
@@ -26,8 +25,7 @@ import lombok.RequiredArgsConstructor;
 public class ReaderServiceImpl implements ReaderService {
 
     private final ReaderRepository readerRepository;
-    private final ReaderResponseDtoMapper readerResponseDtoMapper;
-    private final ReaderRequestDtoMapper readerRequestDtoMapper;
+    private final ReaderDtoMapper readerDtoMapper;
     private final ResponseBodyHelper responseBodyHelper;
     private final StorageService storageService;
 
@@ -53,7 +51,7 @@ public class ReaderServiceImpl implements ReaderService {
         page
                 .stream()
                 .forEach(reader -> {
-                    var each = readerResponseDtoMapper.readerToReaderDto(reader);
+                    var each = readerDtoMapper.readerToReaderResDto(reader);
                     this.setReaderResponseDtoPhoto(each);
                     readerResponseDtos.add(each);
                 });
@@ -63,22 +61,21 @@ public class ReaderServiceImpl implements ReaderService {
     @Override
     public ReaderDto.Response getReader(Long id) {
         var reader = findReaderOrThrow(id);
-        var readerDto = readerResponseDtoMapper.readerToReaderDto(reader);
+        var readerDto = readerDtoMapper.readerToReaderResDto(reader);
         this.setReaderResponseDtoPhoto(readerDto);
         return readerDto;
     }
 
     @Override
     public ReaderDto.Response saveReader(ReaderDto.Request readerDto) {
-        var reader = readerRequestDtoMapper.readerDtoToReader(readerDto);
-        reader.setId(null);
+        var reader = readerDtoMapper.readerReqDtoToReader(readerDto);
         var photoFile = readerDto.getPhoto();
         var photoName = storageService.store(photoFile,
                 StorageFolder.IMAGE.toString() + "/" + READER_PHOTO_DIR);
         reader.setPhoto(photoName);
         readerRepository.save(reader);
 
-        var redearResponseDto = readerResponseDtoMapper.readerToReaderDto(reader);
+        var redearResponseDto = readerDtoMapper.readerToReaderResDto(reader);
         setReaderResponseDtoPhoto(redearResponseDto);
         return redearResponseDto;
     }
@@ -93,9 +90,9 @@ public class ReaderServiceImpl implements ReaderService {
             reader.setPhoto(fileName);
         }
 
-        BeanUtils.copyProperties(readerDto, reader, "photo");
+        BeanUtils.copyProperties(readerDto, reader, "id", "photo");
         readerRepository.save(reader);
-        var redearResponseDto = readerResponseDtoMapper.readerToReaderDto(reader);
+        var redearResponseDto = readerDtoMapper.readerToReaderResDto(reader);
         setReaderResponseDtoPhoto(redearResponseDto);
         return redearResponseDto;
     }
@@ -103,10 +100,10 @@ public class ReaderServiceImpl implements ReaderService {
     @Override
     public void deleteReader(Long id) {
         var reader = findReaderOrThrow(id);
+        readerRepository.delete(reader);
         if (reader.getPhoto() != null) {
             storageService.delete(reader.getPhoto());
         }
-        readerRepository.delete(reader);
     }
 
 }
